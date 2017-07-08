@@ -1,0 +1,11 @@
+{
+  "manifest_version": 2,
+
+  "name": "SplashDash",
+  "description": "This extension shows a Dashboard",
+  "version": "1.0",
+
+  "chrome_url_overrides" : {
+    "newtab": "dashboard.html"
+  }
+}
