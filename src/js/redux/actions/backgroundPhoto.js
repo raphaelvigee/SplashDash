@@ -21,7 +21,7 @@ export function changePhoto() {
     return unsplash.photos.getRandomPhoto({
       width: window.screen.width,
       height: window.screen.height,
-      collections: ['543026', '139237']
+      collections: ['543026', '139237', '932809']
     })
     .then(toJson)
     .then(json => {
