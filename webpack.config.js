@@ -14,22 +14,27 @@ var config = {
     extensions: ['.js', '.jsx']
   },
   module: {
-  loaders: [
-    {
-      test: /\.jsx?$/,
-      loader: 'babel-loader?' + JSON.stringify({
-                        cacheDirectory: true,
-                        presets: ['es2015', 'react', 'stage-0'],
-                        plugins: [
-                            // 'transform-decorators-legacy',
-                            // 'lodash',
-                            // 'react-hot-loader/babel'
-                        ]
-                    }),
-      exclude: /node_modules/
-    }
-  ]
-}
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        loader: 'babel-loader?' + JSON.stringify({
+          cacheDirectory: true,
+          presets: [
+            'es2015', 'react', 'stage-0'
+          ],
+          plugins: [
+            // 'transform-decorators-legacy',
+            // 'lodash',
+            // 'react-hot-loader/babel'
+          ]
+        }),
+        exclude: /node_modules/
+      }, {
+        test: /\.scss$/,
+        loaders: ['style-loader', 'css-loader', 'sass-loader']
+      }
+    ]
+  }
 };
 
 module.exports = config;

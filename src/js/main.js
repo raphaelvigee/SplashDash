@@ -4,5 +4,5 @@ import Dashboard from './Dashboard';
 
 ReactDOM.render(
   <Dashboard />,
-  document.getElementById('root')
+  document.getElementById('app-root')
 );
