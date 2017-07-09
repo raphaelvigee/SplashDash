@@ -25,7 +25,7 @@ export default class BackgroundAppImage extends Component {
   }
 
   getPhoto() {
-    unsplash.photos.getRandomPhoto({width: 1920, height: 1080})
+    unsplash.photos.getRandomPhoto({width: window.screen.width, height: window.screen.height})
     .then(toJson)
     .then(json => {
       console.log(json)
