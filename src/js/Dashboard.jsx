@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import BackgroundAppImage from './BackgroundAppImage';
+import Clock from './Clock';
 
 import '../scss/main.scss'
 
@@ -21,17 +22,49 @@ export default class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      ...getMapStateProps(props),
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      ...getMapStateProps(nextProps)
+    })
   }
 
   render() {
     return (
-      <div>
-        Hello !
+      <div className="fill">
+        <Clock/>
 
-        <button onClick={this.props.backgroundPhotoActions.changePhoto}>New</button>
+        <div className="pos top left" style={{padding: 10}}>
+          <button onClick={this.props.backgroundPhotoActions.changePhoto}>
+            New
+          </button>
+        </div>
+
+        {this.renderCredits()}
 
         <BackgroundAppImage />
+      </div>
+    )
+  }
+
+  renderCredits() {
+    const {backgroundPhoto: {photoData}} = this.state;
+
+    if(!photoData) {
+      return null;
+    }
+
+    const {user, links} = photoData;
+
+    return (
+      <div className="pos bottom left credits">
+        <button onClick={() => window.open(links.html)} className="user">
+          {user.name}
+        </button>
       </div>
     )
   }

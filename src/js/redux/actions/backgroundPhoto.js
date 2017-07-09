@@ -1,8 +1,8 @@
 import Unsplash, {toJson} from 'unsplash-js';
 import * as types from '../types/backgroundPhoto';
 const unsplash = new Unsplash({
-  applicationId: "544cc83e60f4c6f20aef52f65ef81143ab45d8233830565de5d58d3c9e701c3a",
-  secret: "afae6b1bf052d56a528cea9c995a502d1765fc4325b4d6fe4188c608b21bf3b1",
+  applicationId: "4e5b72cc88f656e40b311c6647ec3d61bdba03ad5e2d4865d1040a56a84eec45",
+  secret: "c32f65ad5f7afbe0b26578fe2ab4d6a2183a2cc799b64ee348fb62c2782b488d",
   callbackUrl: "urn:ietf:wg:oauth:2.0:oob"
 });
 
@@ -18,9 +18,14 @@ export function setPhotoData(photoData) {
 
 export function changePhoto() {
   return (dispatch, getState) => {
-    return unsplash.photos.getRandomPhoto({width: window.screen.width, height: window.screen.height})
+    return unsplash.photos.getRandomPhoto({
+      width: window.screen.width,
+      height: window.screen.height,
+      collections: ['543026', '139237']
+    })
     .then(toJson)
     .then(json => {
+      console.log(json)
       dispatch(setPhotoData(json))
     });
   };
