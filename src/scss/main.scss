@@ -1,11 +1,9 @@
 @import '~normalize.css/normalize.css';
 
-$link-color: darken(white, 10%);
-$link-hover-color: white;
-
 * {
   font-family: 'Lato', sans-serif !important;
   outline: none;
+  font-size: 1.05em;
 }
 
 html, body {
@@ -61,7 +59,7 @@ html, body {
 
   .time {
     color: white;
-    font-size: 12em;
+    font-size: 9em;
     text-shadow: 0px 0px 0.5em #3c3c3c;
   }
 }

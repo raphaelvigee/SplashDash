@@ -40,7 +40,7 @@ export default class Dashboard extends Component {
 
         <div className="pos top left" style={{padding: 10}}>
           <button onClick={this.props.backgroundPhotoActions.changePhoto}>
-            New
+            <span className="ion-refresh"></span>
           </button>
         </div>
 
