@@ -21,7 +21,7 @@
   height: 100vh;
 }
 
-.background-app {
+.background-image {
   @extend .absolute-fill;
   z-index: -1;
   overflow: hidden;
@@ -33,6 +33,8 @@
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+
+  object-fit: cover;
 
   &.loaded {
     opacity: 1;
