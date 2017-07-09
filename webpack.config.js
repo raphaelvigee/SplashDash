@@ -23,7 +23,7 @@ var config = {
             'es2015', 'react', 'stage-0'
           ],
           plugins: [
-            // 'transform-decorators-legacy',
+            'transform-decorators-legacy',
             // 'lodash',
             // 'react-hot-loader/babel'
           ]
