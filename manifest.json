@@ -5,7 +5,7 @@
   "description": "This extension shows a Dashboard",
   "version": "1.0",
 
-  "chrome_url_overrides" : {
+  "chrome_url_overrides": {
     "newtab": "src/dashboard.html"
   },
   "content_security_policy": "script-src 'self' http://localhost:8082; object-src 'self'",
