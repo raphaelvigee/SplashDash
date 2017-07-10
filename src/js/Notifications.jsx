@@ -38,7 +38,7 @@ export default class Notifications extends Component {
 
   componentDidMount() {
     GitHub
-    .get('/notifications?all=true')
+    .get('/notifications')
     .then(r => {
       this.setState({
         notifications: r.data
