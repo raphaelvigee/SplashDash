@@ -1,8 +1,10 @@
 import Unsplash, {toJson} from 'unsplash-js';
 import * as types from '../types/backgroundPhoto';
+import config from '~/.env.js';
+
 const unsplash = new Unsplash({
-  applicationId: "4e5b72cc88f656e40b311c6647ec3d61bdba03ad5e2d4865d1040a56a84eec45",
-  secret: "c32f65ad5f7afbe0b26578fe2ab4d6a2183a2cc799b64ee348fb62c2782b488d",
+  applicationId: config.UNSPLASH_APP_ID,
+  secret: config.UNSPLASH_SECRET,
   callbackUrl: "urn:ietf:wg:oauth:2.0:oob"
 });
 
