@@ -11,7 +11,10 @@ var config = {
     filename: 'app.js'
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    alias: {
+      '~': '.'
+    }
   },
   module: {
     loaders: [
@@ -24,6 +27,7 @@ var config = {
           ],
           plugins: [
             'transform-decorators-legacy',
+            'babel-plugin-webpack-alias',
             // 'lodash',
             // 'react-hot-loader/babel'
           ]

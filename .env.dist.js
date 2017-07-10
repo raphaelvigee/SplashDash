@@ -1,0 +1,6 @@
+export default {
+  UNSPLASH_APP_ID: 'XXX',
+  UNSPLASH_SECRET: 'XXX',
+  GH_USERNAME: 'XXX',
+  GH_PASSWORD: 'XXX',
+}

@@ -1,0 +1,11 @@
+.credits {
+  padding: 12px;
+
+  .user {
+    color: white;
+
+    &:link, &:active {
+      text-decoration: none;
+    }
+  }
+}

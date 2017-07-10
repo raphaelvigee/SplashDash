@@ -3,7 +3,9 @@
 * {
   font-family: 'Lato', sans-serif !important;
   outline: none;
-  font-size: 1.05em;
+  font-size: 1.03em;
+  line-height: 1.03em;
+  overflow: hidden;
 }
 
 html, body {
@@ -40,38 +42,6 @@ html, body {
   }
 }
 
-.clock {
-  @extend .fill;
-
-  .container-row {
-    @extend .f-row;
-  }
-
-  .container-col {
-    @extend .f-col;
-  }
-
-  .container-col, .container-row {
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .time {
-    color: white;
-    font-size: 9em;
-    text-shadow: 0px 0px 0.5em #3c3c3c;
-  }
-}
-
-.credits {
-  padding: 12px;
-
-  .user {
-    color: white;
-
-    &:link, &:active {
-      text-decoration: none;
-    }
-  }
-}
+@import "clock";
+@import "credits";
+@import "notifications";
