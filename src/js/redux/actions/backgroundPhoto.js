@@ -25,18 +25,31 @@ export function changePhoto() {
   return (dispatch, getState) => {
     return (async () => {
       let shownCount = await getShownCount();
+      let itemsIndex = await getItemsIndex();
 
-      if(shownCount > 30 || (await getItemsIndex()).length < 1) {
+      if(shownCount > 30 || itemsIndex.length < 1) {
+        if(shownCount > 30) {
+          console.log(`More than 30 shown since last fetching (${shownCount})`)
+        }
+
+        if(itemsIndex.length < 1) {
+          console.log("Less than 1 image available")
+        }
+
         console.log("Fetching new images");
 
-        chrome.storage.local.set({shownCount: 0});
+        await chrome.storage.promise.local.set({shownCount: 0});
 
         await fetchPhotos()
+
+        itemsIndex = await getItemsIndex()
+      } else {
+        console.log(`Using cached images, shown ${shownCount}`);
+
+        chrome.storage.local.set({shownCount: ++shownCount});
       }
 
-      console.log("Using cached images");
-
-      chrome.storage.local.set({shownCount: shownCount + 1});
+      console.log(`${itemsIndex.length} images in cache`)
 
       dispatch(setPhotoData(await getRandomPhotoFromStorage()))
     })()
@@ -64,19 +77,20 @@ export function fetchPhotos() {
             thumb: await fetchImageContent(item.urls.thumb),
             custom: await fetchImageContent(item.urls.custom),
           }
-        },
-        itemsIndex
+        }
       };
 
-      await chrome.storage.promise.local.set(data)
+      return await chrome.storage.promise.local.set(data)
     })
 
     await Promise.all(setPromises);
+
+    await chrome.storage.promise.local.set({itemsIndex})
   });
 }
 
 export async function getRandomPhotoFromStorage() {
-  let itemId = _.sample(await getItemsIndex());
+  const itemId = _.sample(await getItemsIndex());
 
   return await chrome.storage.promise.local.get(itemId).then((items) => {
     return items[itemId];
