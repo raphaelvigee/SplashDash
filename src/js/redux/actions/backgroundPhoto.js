@@ -3,6 +3,7 @@ import * as types from '../types/backgroundPhoto';
 import config from '~/.env.js';
 import axios from 'axios';
 import _ from 'lodash';
+import 'chrome-storage-promise'
 
 const unsplash = new Unsplash({
   applicationId: config.UNSPLASH_APP_ID,
@@ -24,8 +25,6 @@ export function changePhoto() {
   return (dispatch, getState) => {
     return (async () => {
       let shownCount = await getShownCount();
-
-      console.log("Show Count: ", shownCount);
 
       if(shownCount > 30 || (await getItemsIndex()).length < 1) {
         console.log("Fetching new images");
@@ -53,9 +52,9 @@ export function fetchPhotos() {
   })
   .then(toJson)
   .then(async items => {
-    let itemsIndex = await getItemsIndex()
+    let itemsIndex = await getItemsIndex();
 
-    items.map(async (item) => {
+    let setPromises = items.map(async (item) => {
       itemsIndex.push(item.id)
 
       let data = {
@@ -69,37 +68,31 @@ export function fetchPhotos() {
         itemsIndex
       };
 
-      console.log(data)
-
-      chrome.storage.local.set(data)
+      await chrome.storage.promise.local.set(data)
     })
+
+    await Promise.all(setPromises);
   });
 }
 
 export async function getRandomPhotoFromStorage() {
   let itemId = _.sample(await getItemsIndex());
 
-  return await new Promise((resolve, reject) => {
-      chrome.storage.local.get(itemId, (items) => {
-        resolve(items[itemId])
-      })
-    })
+  return await chrome.storage.promise.local.get(itemId).then((items) => {
+    return items[itemId];
+  })
 }
 
 export async function getShownCount() {
-  return await new Promise((resolve, reject) => {
-      chrome.storage.local.get('shownCount', (items) => {
-        resolve(parseInt(items['shownCount']) || 0);
-      })
-    })
+  return await chrome.storage.promise.local.get('shownCount').then((items) => {
+    return items['shownCount'] || 0;
+  })
 }
 
 export async function getItemsIndex() {
-  return await new Promise((resolve, reject) => {
-      chrome.storage.local.get('itemsIndex', (items) => {
-        resolve(items['itemsIndex'] || []);
-      })
-    })
+  return await chrome.storage.promise.local.get('itemsIndex').then((items) => {
+    return items['itemsIndex'] || [];
+  })
 }
 
 async function fetchImageContent(url) {

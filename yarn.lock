@@ -1169,6 +1169,10 @@ chokidar@^1.4.3, chokidar@^1.6.0:
   optionalDependencies:
     fsevents "^1.0.0"
 
+chrome-storage-promise@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/chrome-storage-promise/-/chrome-storage-promise-0.1.0.tgz#44a0060ae0c465e0c56b52734f68664c0bd2be35"
+
 cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/cipher-base/-/cipher-base-1.0.4.tgz#8760e4ecc272f4c363532f926d874aae2c1397de"
