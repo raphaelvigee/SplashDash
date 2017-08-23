@@ -97,7 +97,7 @@ export default class Dashboard extends Component {
       return null;
     }
 
-    const {user, links} = photoData;
+    const {user, links} = photoData.data;
 
     if(!user) {
       return null;
