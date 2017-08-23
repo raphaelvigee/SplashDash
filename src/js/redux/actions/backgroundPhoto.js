@@ -27,7 +27,7 @@ export function changePhoto() {
       let shownCount = await getShownCount();
       let itemsIndex = await getItemsIndex();
 
-      if(shownCount > 30 || itemsIndex.length < 1) {
+      if((shownCount > 30 || itemsIndex.length < 1) && navigator.onLine) {
         if(shownCount > 30) {
           console.log(`More than 30 shown since last fetching (${shownCount})`)
         }
@@ -68,8 +68,6 @@ export function fetchPhotos() {
     let itemsIndex = await getItemsIndex();
 
     let setPromises = items.map(async (item) => {
-      itemsIndex.push(item.id)
-
       let data = {
         [item.id]: {
           data: item,
@@ -80,12 +78,18 @@ export function fetchPhotos() {
         }
       };
 
-      return await chrome.storage.promise.local.set(data)
+      return chrome.storage.promise.local.set(data).then(() => {
+        itemsIndex.push(item.id)
+
+        return chrome.storage.promise.local.set({itemsIndex});
+      })
     })
 
-    await Promise.all(setPromises);
+    Promise.all(setPromises).then(() => {
+      return chrome.storage.promise.local.set({itemsIndex});
+    });
 
-    await chrome.storage.promise.local.set({itemsIndex})
+    return Promise.race(setPromises);
   });
 }
 

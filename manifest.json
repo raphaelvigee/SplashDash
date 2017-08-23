@@ -13,5 +13,6 @@
     "<all_urls>",
     "storage",
     "unlimitedStorage"
-  ]
+  ],
+  "offline_enabled": true
 }
