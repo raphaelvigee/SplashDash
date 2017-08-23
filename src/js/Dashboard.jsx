@@ -99,6 +99,10 @@ export default class Dashboard extends Component {
 
     const {user, links} = photoData;
 
+    if(!user) {
+      return null;
+    }
+
     return (
       <div className="pos bottom left credits">
         <button onClick={() => window.open(links.html)} className="user">
