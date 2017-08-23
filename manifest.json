@@ -8,8 +8,10 @@
   "chrome_url_overrides": {
     "newtab": "src/dashboard.html"
   },
-  "content_security_policy": "script-src 'self' http://localhost:8082; object-src 'self'",
+  "content_security_policy": "script-src 'self' http://localhost:8081; object-src 'self'",
   "permissions": [
-    "<all_urls>"
+    "<all_urls>",
+    "storage",
+    "unlimitedStorage"
   ]
 }

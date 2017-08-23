@@ -32,10 +32,10 @@ export default class BackgroundAppImage extends Component {
   }
 
   componentDidMount() {
-    this.getPhoto();
+    this.changePhoto();
   }
 
-  getPhoto() {
+  changePhoto() {
     this.props.backgroundPhotoActions.changePhoto()
   }
 
@@ -43,14 +43,13 @@ export default class BackgroundAppImage extends Component {
     let {backgroundPhoto: {photoData}} = this.state;
 
     if(!photoData) {
-      return <h1>Loading...</h1>
+      return <h1>{`Loading...`}</h1>
     }
 
+    console.log(photoData)
+
     return (
-      <div>
-        <FadeInBlurredImage url={photoData.urls.thumb} />
-        <FadeInImage url={photoData.urls.custom} />
-      </div>
+      <img ref={i => this.imageElement = i} className={`background-image`} src={photoData.files.custom} />
     )
   }
 }
