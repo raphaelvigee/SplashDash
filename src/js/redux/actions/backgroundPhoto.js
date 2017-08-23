@@ -60,7 +60,7 @@ export function fetchPhotos() {
   return unsplash.photos.getRandomPhoto({
     width: window.screen.width,
     height: window.screen.height,
-    collections: ['543026', '139237', '932809'],
+    collections: ['543026', '139237', '932809', '1108634', '981639', '162572', '150672', '256443'],
     count: 30
   })
   .then(toJson)
