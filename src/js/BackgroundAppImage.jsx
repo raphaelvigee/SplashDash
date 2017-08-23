@@ -49,7 +49,7 @@ export default class BackgroundAppImage extends Component {
     console.log(photoData)
 
     return (
-      <img ref={i => this.imageElement = i} className={`background-image`} src={photoData.files.custom} />
+        <FadeInImage url={photoData.files.custom} />
     )
   }
 }
