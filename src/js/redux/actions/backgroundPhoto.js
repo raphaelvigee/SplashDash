@@ -27,12 +27,15 @@ export function changePhoto() {
       let shownCount = await getShownCount();
       let itemsIndex = await getItemsIndex();
 
-      if((shownCount > 30 || itemsIndex.length < 1) && navigator.onLine) {
-        if(shownCount > 30) {
+      const shouldPeriodicalFetch = shownCount > 30;
+      const hasItems = itemsIndex.length > 0;
+
+      if((shouldPeriodicalFetch || !hasItems) && navigator.onLine) {
+        if(shouldPeriodicalFetch) {
           console.log(`More than 30 shown since last fetching (${shownCount})`)
         }
 
-        if(itemsIndex.length < 1) {
+        if(!hasItems) {
           console.log("Less than 1 image available")
         }
 
@@ -40,7 +43,11 @@ export function changePhoto() {
 
         await chrome.storage.promise.local.set({shownCount: 0});
 
-        await fetchPhotos()
+        if(hasItems) {
+          fetchPhotos()
+        }else {
+          await fetchPhotos()
+        }
 
         itemsIndex = await getItemsIndex()
       } else {
