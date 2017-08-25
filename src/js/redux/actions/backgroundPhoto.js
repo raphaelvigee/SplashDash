@@ -24,8 +24,13 @@ export function setPhotoData(photoData) {
 export function changePhoto() {
   return (dispatch, getState) => {
     return (async () => {
-      let shownCount = await getShownCount();
-      let itemsIndex = await getItemsIndex();
+      const promisedData = await Promise.all([
+        getShownCount(),
+        getItemsIndex(),
+      ]);
+
+      let shownCount = promisedData[0];
+      let itemsIndex = promisedData[1];
 
       const shouldPeriodicalFetch = shownCount > 30;
       const hasItems = itemsIndex.length > 0;
@@ -75,21 +80,29 @@ export function fetchPhotos() {
     let itemsIndex = await getItemsIndex();
 
     let setPromises = items.map(async (item) => {
+      const imagesFetch = await Promise.all([
+        fetchImageContent(item.urls.thumb),
+        fetchImageContent(item.urls.custom),
+      ]);
+
+      const thumbContent = imagesFetch[0];
+      const customContent = imagesFetch[1];
+
       let data = {
         [item.id]: {
           data: item,
           files: {
-            thumb: await fetchImageContent(item.urls.thumb),
-            custom: await fetchImageContent(item.urls.custom),
+            thumb: thumbContent,
+            custom: customContent,
           }
         }
       };
 
-      return chrome.storage.promise.local.set(data).then(() => {
-        itemsIndex.push(item.id)
+      await chrome.storage.promise.local.set(data);
 
-        return chrome.storage.promise.local.set({itemsIndex});
-      })
+      itemsIndex.push(item.id)
+
+      await chrome.storage.promise.local.set({itemsIndex});
     })
 
     Promise.all(setPromises).then(() => {
@@ -102,35 +115,32 @@ export function fetchPhotos() {
 
 export async function getRandomPhotoFromStorage() {
   const itemId = _.sample(await getItemsIndex());
+  const items = await chrome.storage.promise.local.get(itemId);
 
-  return await chrome.storage.promise.local.get(itemId).then((items) => {
-    return items[itemId];
-  })
+  return items[itemId];
 }
 
 export async function getShownCount() {
-  return await chrome.storage.promise.local.get('shownCount').then((items) => {
-    return items['shownCount'] || 0;
-  })
+  const k = 'shownCount';
+  const items = await chrome.storage.promise.local.get(k);
+
+  return items[k] || 0;
 }
 
 export async function getItemsIndex() {
-  return await chrome.storage.promise.local.get('itemsIndex').then((items) => {
-    return items['itemsIndex'] || [];
-  })
+  const k = 'itemsIndex';
+  const items = await chrome.storage.promise.local.get(k);
+
+  return items[k] || [];
 }
 
 async function fetchImageContent(url) {
-  return await axios
-    .get(url, {
-      responseType: 'blob'
-    })
-    .then(r => {
-      return new Promise((resolve, reject) => {
-          const reader = new FileReader()
-          reader.onloadend = () => resolve(reader.result)
-          reader.onerror = reject
-          reader.readAsDataURL(r.data)
-        })
-    })
+  const response = await axios.get(url, {responseType: 'blob'});
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(response.data)
+  })
 }
