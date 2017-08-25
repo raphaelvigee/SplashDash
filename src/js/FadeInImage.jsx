@@ -7,53 +7,50 @@ export default class FadeInImage extends Component {
     this.state = {
       show: props.show,
       url: props.url,
-      onLoad: props.onLoad,
+      previousShow: false,
+      previousUrl: null,
     };
-
-    this.image = this.getImageObject();
   }
 
-  onLoad(image) {
-    if (typeof this.state.onLoad == 'function') {
-      return this.state.onLoad(image);
-    }
-
+  onLoad() {
     this.setState({
       show: true,
+      previousShow: false,
     });
-  }
-
-  getImageObject() {
-    let image = new Image();
-    image.crossOrigin = 'anonymous';
-    image.src = this.state.url;
-    image.onload = () => this.onLoad(image);
-
-    return image;
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
+    let data = {
       show: nextProps.show,
       onLoad: nextProps.onLoad,
-    });
+    };
 
-    if (nextProps.url != this.state.url) {
-      //debugger;
-      this.setState({
+    if (nextProps.url !== this.state.url) {
+      data = {
+        ...data,
         url: nextProps.url,
-        show: false,
-      }, () => {
-        this.image = this.getImageObject();
-      });
+        show: true,
+        previousUrl: this.state.url,
+        previousShow: true,
+      };
     }
+
+    this.setState(data);
   }
 
   render() {
     return (
-        <img ref={i => this.imageElement = i}
-             className={`background-image ${this.state.show ? 'loaded' : ''}`}
-             src={this.state.url}/>
+        <div>
+          <img className={this.getImgClass(this.state.show)}
+               src={this.state.url}
+               onLoad={() => this.onLoad()}/>
+          <img className={this.getImgClass(this.state.previousShow)}
+               src={this.state.previousUrl}/>
+        </div>
     );
+  }
+
+  getImgClass(show) {
+    return `background-image ${show ? 'loaded' : ''}`;
   }
 }

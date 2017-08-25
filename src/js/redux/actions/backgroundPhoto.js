@@ -4,12 +4,22 @@ import config from '~/.env.js';
 import axios from 'axios';
 import _ from 'lodash';
 import 'chrome-storage-promise';
+import db from '../../services/db';
 
 const unsplash = new Unsplash({
   applicationId: config.UNSPLASH_APP_ID,
   secret: config.UNSPLASH_SECRET,
   callbackUrl: 'urn:ietf:wg:oauth:2.0:oob',
 });
+
+window.clearImages = async () => {
+  await Promise.all([
+    chrome.storage.local.clear(),
+    db.images.clear(),
+  ]);
+
+  console.log('Cleared !');
+};
 
 export function setPhotoData(photoData) {
   return (dispatch, getState) => {
@@ -24,15 +34,8 @@ export function setPhotoData(photoData) {
 export function changePhoto() {
   return (dispatch, getState) => {
     return (async () => {
-      dispatch(setPhotoData(null));
-
-      const promisedData = await Promise.all([
-        getShownCount(),
-        getItemsIndex(),
-      ]);
-
-      let shownCount = promisedData[0];
-      let itemsIndex = promisedData[1];
+      let shownCount = await getShownCount();
+      let itemsIndex = await getItemsIndex();
 
       const shouldPeriodicalFetch = shownCount > 30;
       const hasItems = itemsIndex.length > 0;
@@ -86,36 +89,24 @@ export function fetchPhotos() {
     ],
     count: 30,
   }).then(toJson).then(async items => {
-    let itemsIndex = await getItemsIndex();
-
     let setPromises = items.map(async (item) => {
-      const imagesFetch = await Promise.all([
-        fetchImageContent(item.urls.thumb),
-        fetchImageContent(item.urls.custom),
-      ]);
-
-      const thumbContent = imagesFetch[0];
-      const customContent = imagesFetch[1];
+      const thumbContent = fetchImageContent(item.urls.thumb);
+      const customContent = fetchImageContent(item.urls.custom);
 
       let data = {
         [item.id]: {
           data: item,
           files: {
-            thumb: thumbContent,
-            custom: customContent,
+            thumb: await thumbContent,
+            custom: await customContent,
           },
         },
       };
 
-      await chrome.storage.promise.local.set(data);
-
-      itemsIndex.push(item.id);
-
-      await chrome.storage.promise.local.set({itemsIndex});
-    });
-
-    Promise.all(setPromises).then(() => {
-      return chrome.storage.promise.local.set({itemsIndex});
+      await Promise.all([
+        chrome.storage.promise.local.set(data),
+        db.images.add({id: item.id}).catch(() => {}),
+      ]);
     });
 
     return Promise.race(setPromises);
@@ -137,10 +128,9 @@ export async function getShownCount() {
 }
 
 export async function getItemsIndex() {
-  const k = 'itemsIndex';
-  const items = await chrome.storage.promise.local.get(k);
+  const items = await db.images.toArray();
 
-  return items[k] || [];
+  return items.map(i => i.id);
 }
 
 async function fetchImageContent(url) {
