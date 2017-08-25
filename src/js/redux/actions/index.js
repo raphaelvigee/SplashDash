@@ -1,4 +1,4 @@
-import { bindActionCreators } from 'redux';
+import {bindActionCreators} from 'redux';
 import * as backgroundPhoto from './backgroundPhoto';
 
 export default function getActions(dispatch) {

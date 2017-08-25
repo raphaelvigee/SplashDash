@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-import StackBlur from 'stackblur-canvas';
 
 export default class FadeInImage extends Component {
   constructor(props) {
@@ -10,19 +8,19 @@ export default class FadeInImage extends Component {
       show: props.show,
       url: props.url,
       onLoad: props.onLoad,
-    }
+    };
 
     this.image = this.getImageObject();
   }
 
   onLoad(image) {
-    if (typeof this.state.onLoad == 'function' ) {
+    if (typeof this.state.onLoad == 'function') {
       return this.state.onLoad(image);
     }
 
     this.setState({
-      show: true
-    })
+      show: true,
+    });
   }
 
   getImageObject() {
@@ -38,22 +36,24 @@ export default class FadeInImage extends Component {
     this.setState({
       show: nextProps.show,
       onLoad: nextProps.onLoad,
-    })
+    });
 
-    if(nextProps.url != this.state.url) {
+    if (nextProps.url != this.state.url) {
       //debugger;
       this.setState({
         url: nextProps.url,
         show: false,
       }, () => {
         this.image = this.getImageObject();
-      })
+      });
     }
   }
 
-  render () {
+  render() {
     return (
-      <img ref={i => this.imageElement = i} className={`background-image ${this.state.show ? 'loaded' : ''}`} src={this.state.url} />
-    )
+        <img ref={i => this.imageElement = i}
+             className={`background-image ${this.state.show ? 'loaded' : ''}`}
+             src={this.state.url}/>
+    );
   }
 }

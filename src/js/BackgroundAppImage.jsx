@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-import StackBlur from 'stackblur-canvas';
 import FadeInImage from './FadeInImage';
-import FadeInBlurredImage from './FadeInBlurredImage';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import getReduxActions from './redux/actions';
 
 const getMapStateProps = e => ({
@@ -22,13 +19,13 @@ export default class BackgroundAppImage extends Component {
 
     this.state = {
       ...getMapStateProps(props)
-    }
+    };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       ...getMapStateProps(nextProps)
-    })
+    });
   }
 
   componentDidMount() {
@@ -36,20 +33,20 @@ export default class BackgroundAppImage extends Component {
   }
 
   changePhoto() {
-    this.props.backgroundPhotoActions.changePhoto()
+    this.props.backgroundPhotoActions.changePhoto();
   }
 
   render() {
     let {backgroundPhoto: {photoData}} = this.state;
 
-    if(!photoData) {
-      return <h1>{`Loading...`}</h1>
+    if (!photoData) {
+      return <h1>{`Loading...`}</h1>;
     }
 
-    console.log(photoData)
+    console.log(photoData);
 
     return (
-        <FadeInImage url={photoData.files.custom} />
-    )
+        <FadeInImage url={photoData.files.custom}/>
+    );
   }
 }
