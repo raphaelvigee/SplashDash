@@ -34,13 +34,8 @@ export function setPhotoData(photoData) {
 export function changePhoto() {
   return (dispatch, getState) => {
     return (async () => {
-      const promisedData = await Promise.all([
-        getShownCount(),
-        getItemsIndex(),
-      ]);
-
-      let shownCount = promisedData[0];
-      let itemsIndex = promisedData[1];
+      let shownCount = await getShownCount();
+      let itemsIndex = await getItemsIndex();
 
       const shouldPeriodicalFetch = shownCount > 30;
       const hasItems = itemsIndex.length > 0;
@@ -110,7 +105,7 @@ export function fetchPhotos() {
 
       await Promise.all([
         chrome.storage.promise.local.set(data),
-        db.images.add({id: item.id}),
+        db.images.add({id: item.id}).catch(() => {}),
       ]);
     });
 
