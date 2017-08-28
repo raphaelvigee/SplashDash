@@ -27,7 +27,7 @@ export function getCurrent() {
     const photoDataHistory = state.backgroundPhoto.photoDataHistory;
     const photoDataIndex = state.backgroundPhoto.photoDataIndex;
 
-    if(!Number.isInteger(photoDataIndex)) {
+    if (!Number.isInteger(photoDataIndex)) {
       return null;
     }
 
@@ -58,7 +58,7 @@ export function previous() {
 
       const photoDataIndex = state.backgroundPhoto.photoDataIndex - 1;
 
-      if(photoDataHistory[photoDataIndex]) {
+      if (photoDataHistory[photoDataIndex]) {
         dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
       }
 
@@ -75,7 +75,7 @@ export function next() {
 
       const photoDataIndex = state.backgroundPhoto.photoDataIndex + 1;
 
-      if(photoDataHistory[photoDataIndex]) {
+      if (photoDataHistory[photoDataIndex]) {
         dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
       }
 
@@ -158,7 +158,8 @@ export function fetchPhotos() {
 
       await Promise.all([
         chrome.storage.promise.local.set(data),
-        db.images.add({id: item.id}).catch(() => {}),
+        db.images.add({id: item.id}).catch(() => {
+        }),
       ]);
     });
 

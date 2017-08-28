@@ -17,7 +17,7 @@ export default function backgroundPhoto(state = initialState, action = {}) {
         ...state,
         photoDataHistory: [
           ...state.photoDataHistory,
-          action.photoData
+          action.photoData,
         ],
       };
     default:

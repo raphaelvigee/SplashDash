@@ -39,6 +39,12 @@ export default class BackgroundAppImage extends Component {
     Mousetrap.bind('r', this.change);
   }
 
+  componentWillUnmount() {
+    Mousetrap.unbind('left');
+    Mousetrap.unbind('right');
+    Mousetrap.unbind('r');
+  }
+
   change() {
     this.props.backgroundPhotoActions.change();
   }
