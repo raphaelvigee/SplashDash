@@ -71,8 +71,14 @@ export default class Dashboard extends Component {
           </div>
 
           <div className="pos top left" style={{padding: 10}}>
-            <button onClick={this.props.backgroundPhotoActions.changePhoto}>
+            <button onClick={this.props.backgroundPhotoActions.previous}>
+              <span className="ion-chevron-left"></span>
+            </button>
+            <button onClick={this.props.backgroundPhotoActions.change}>
               <span className="ion-refresh"></span>
+            </button>
+            <button onClick={this.props.backgroundPhotoActions.next}>
+              <span className="ion-chevron-right"></span>
             </button>
           </div>
 
@@ -90,7 +96,7 @@ export default class Dashboard extends Component {
   }
 
   renderCredits() {
-    const {backgroundPhoto: {photoData}} = this.state;
+    const photoData = this.props.backgroundPhotoActions.getCurrent();
 
     if (!photoData) {
       return null;
