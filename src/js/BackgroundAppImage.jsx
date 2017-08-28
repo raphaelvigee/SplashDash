@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import FadeInImage from './FadeInImage';
 import {connect} from 'react-redux';
 import getReduxActions from './redux/actions';
+import Mousetrap from 'mousetrap';
+import autobind from 'autobind-decorator';
 
 const getMapStateProps = e => ({
   backgroundPhoto: e.backgroundPhoto,
@@ -13,6 +15,7 @@ const getMapDispatchToProps = dispatch => ({
 });
 
 @connect(getMapStateProps, getMapDispatchToProps)
+@autobind
 export default class BackgroundAppImage extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +33,10 @@ export default class BackgroundAppImage extends Component {
 
   componentDidMount() {
     this.changePhoto();
+
+    Mousetrap.bind('left', this.props.backgroundPhotoActions.previousPhoto);
+    Mousetrap.bind('right', this.props.backgroundPhotoActions.nextPhoto);
+    Mousetrap.bind('r', this.changePhoto);
   }
 
   changePhoto() {
