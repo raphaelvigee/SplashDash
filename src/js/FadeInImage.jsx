@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
+import autobind from 'autobind-decorator';
 
+@autobind
 export default class FadeInImage extends Component {
   constructor(props) {
     super(props);

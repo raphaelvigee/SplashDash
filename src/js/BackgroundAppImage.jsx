@@ -37,13 +37,11 @@ export default class BackgroundAppImage extends Component {
   }
 
   render() {
-    let {backgroundPhoto: {photoData}} = this.state;
+    const photoData = this.props.backgroundPhotoActions.getCurrentPhotoData();
 
     if (!photoData) {
       return <h1>{`Loading...`}</h1>;
     }
-
-    console.log(photoData);
 
     return (
         <FadeInImage url={photoData.files.custom}/>

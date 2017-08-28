@@ -21,10 +21,63 @@ window.clearImages = async () => {
   console.log('Cleared !');
 };
 
-export function setPhotoData(photoData) {
+export function getCurrentPhotoData() {
+  return (dispatch, getState) => {
+    const state = getState();
+    const photoDataHistory = state.backgroundPhoto.photoDataHistory;
+    const photoDataIndex = state.backgroundPhoto.photoDataIndex;
+
+    if(!Number.isInteger(photoDataIndex)) {
+      return null;
+    }
+
+    return photoDataHistory[photoDataIndex] || null;
+  };
+}
+
+export function setPhotoData(photoData, updateHistory = true) {
   return (dispatch, getState) => {
     return new Promise((resolve, reject) => {
-      dispatch({type: types.SET_BACKGROUND_PHOTO_DATA, photoData});
+      dispatch({type: types.ADD_BACKGROUND_PHOTO_DATA_HISTORY, photoData});
+
+      const state = getState();
+      const photoDataIndex = state.backgroundPhoto.photoDataHistory.length - 1;
+
+      dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
+
+      resolve();
+    });
+  };
+}
+
+export function previousPhoto() {
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      const state = getState();
+      const photoDataHistory = state.backgroundPhoto.photoDataHistory;
+
+      const photoDataIndex = state.backgroundPhoto.photoDataIndex - 1;
+
+      if(photoDataHistory[photoDataIndex]) {
+        dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
+      }
+
+      resolve();
+    });
+  };
+}
+
+export function nextPhoto() {
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      const state = getState();
+      const photoDataHistory = state.backgroundPhoto.photoDataHistory;
+
+      const photoDataIndex = state.backgroundPhoto.photoDataIndex + 1;
+
+      if(photoDataHistory[photoDataIndex]) {
+        dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
+      }
 
       resolve();
     });
