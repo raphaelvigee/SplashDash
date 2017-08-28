@@ -32,19 +32,19 @@ export default class BackgroundAppImage extends Component {
   }
 
   componentDidMount() {
-    this.changePhoto();
+    this.change();
 
-    Mousetrap.bind('left', this.props.backgroundPhotoActions.previousPhoto);
-    Mousetrap.bind('right', this.props.backgroundPhotoActions.nextPhoto);
-    Mousetrap.bind('r', this.changePhoto);
+    Mousetrap.bind('left', this.props.backgroundPhotoActions.previous);
+    Mousetrap.bind('right', this.props.backgroundPhotoActions.next);
+    Mousetrap.bind('r', this.change);
   }
 
-  changePhoto() {
-    this.props.backgroundPhotoActions.changePhoto();
+  change() {
+    this.props.backgroundPhotoActions.change();
   }
 
   render() {
-    const photoData = this.props.backgroundPhotoActions.getCurrentPhotoData();
+    const photoData = this.props.backgroundPhotoActions.getCurrent();
 
     if (!photoData) {
       return <h1>{`Loading...`}</h1>;

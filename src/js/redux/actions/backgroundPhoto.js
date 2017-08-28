@@ -21,7 +21,7 @@ window.clearImages = async () => {
   console.log('Cleared !');
 };
 
-export function getCurrentPhotoData() {
+export function getCurrent() {
   return (dispatch, getState) => {
     const state = getState();
     const photoDataHistory = state.backgroundPhoto.photoDataHistory;
@@ -50,7 +50,7 @@ export function setPhotoData(photoData, updateHistory = true) {
   };
 }
 
-export function previousPhoto() {
+export function previous() {
   return (dispatch, getState) => {
     return new Promise((resolve, reject) => {
       const state = getState();
@@ -67,7 +67,7 @@ export function previousPhoto() {
   };
 }
 
-export function nextPhoto() {
+export function next() {
   return (dispatch, getState) => {
     return new Promise((resolve, reject) => {
       const state = getState();
@@ -84,7 +84,7 @@ export function nextPhoto() {
   };
 }
 
-export function changePhoto() {
+export function change() {
   return (dispatch, getState) => {
     return (async () => {
       let shownCount = await getShownCount();
