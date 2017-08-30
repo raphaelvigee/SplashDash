@@ -8,48 +8,58 @@ var config = {
   entry: ['babel-polyfill', APP_DIR + '/main.js'],
   output: {
     path: BUILD_DIR,
-    filename: 'app.js'
+    filename: 'app.js',
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      '~': '.'
-    }
+      '~': '.',
+    },
   },
   module: {
     loaders: [
+      {
+        test: /\.tsx?$/,
+        loader: 'awesome-typescript-loader',
+      },
       {
         test: /\.jsx?$/,
         loader: 'babel-loader?' + JSON.stringify({
           cacheDirectory: true,
           presets: [
-            'es2015', 'react', 'stage-0'
+            'es2015', 'react', 'stage-0',
           ],
           plugins: [
             'transform-decorators-legacy',
             'babel-plugin-webpack-alias',
             // 'lodash',
             // 'react-hot-loader/babel'
-          ]
+          ],
         }),
-        exclude: /node_modules/
-      }, {
+        exclude: /node_modules/,
+      },
+      {
         test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'sass-loader']
-      }
-    ]
+        loaders: ['style-loader', 'css-loader', 'sass-loader'],
+      },
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        loader: 'source-map-loader',
+      },
+    ],
   },
   plugins: [
     new webpack.DefinePlugin({
       // A common mistake is not stringifying the "production" string.
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
-        warnings: false
-      }
-    })
-  ]
+        warnings: false,
+      },
+    }),
+  ],
 };
 
 module.exports = config;
