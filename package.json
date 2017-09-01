@@ -6,8 +6,10 @@
   "author": "Raphael Vigee <contact@raphaelvigee.com>",
   "license": "MIT",
   "dependencies": {
+    "@types/lodash": "^4.14.74",
     "@types/react": "^16.0.5",
     "@types/react-dom": "^15.5.4",
+    "@types/react-redux": "^5.0.5",
     "autobind-decorator": "^2.1.0",
     "awesome-typescript-loader": "^3.2.3",
     "axios": "^0.16.2",

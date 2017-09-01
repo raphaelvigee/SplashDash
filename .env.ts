@@ -1,0 +1,6 @@
+export default {
+  UNSPLASH_APP_ID: '27e397a67dc8ed7fce5412c0c6d29a6a783eda170469bda9fa7c4fd6a2ad3410',
+  UNSPLASH_SECRET: 'ca75c3d952c6170c57cd431ccf8cf6843879a330ac39fa5d2be51572d051ab71',
+  GH_USERNAME: 'raphaelvigee',
+  GH_PASSWORD: 'Rv050598',
+}

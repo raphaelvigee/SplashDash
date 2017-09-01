@@ -3,8 +3,12 @@ import autobind from 'autobind-decorator';
 
 export interface Props {
     url: string;
-    show: boolean;
+    show?: boolean;
 }
+
+export const DefaultProps = {
+    show: false
+};
 
 export interface State {
     url: string;
@@ -13,7 +17,10 @@ export interface State {
     previousUrl: string;
 }
 
-class FadeInImage extends React.Component<Props, State> {
+@autobind
+export default class FadeInImage extends React.Component<Props, State> {
+    public static defaultProps: Partial<Props> = DefaultProps;
+
     constructor(props: Props) {
         super(props);
 
@@ -65,5 +72,3 @@ class FadeInImage extends React.Component<Props, State> {
         return `background-image ${show ? 'loaded' : ''}`;
     }
 }
-
-export default autobind(FadeInImage);
