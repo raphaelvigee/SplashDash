@@ -31,7 +31,9 @@ export default class BackgroundAppImage extends Component {
     });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await this.props.backgroundPhotoActions.populateHistory();
+
     this.change();
 
     Mousetrap.bind('left', this.props.backgroundPhotoActions.previous);

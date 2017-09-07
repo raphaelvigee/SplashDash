@@ -44,6 +44,7 @@ export function setPhotoData(photoData, updateHistory = true) {
       const photoDataIndex = state.backgroundPhoto.photoDataHistory.length - 1;
 
       dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
+      db.history.add({imageId: photoData.data.id});
 
       resolve();
     });
@@ -57,12 +58,12 @@ export function previous() {
       const photoDataHistory = state.backgroundPhoto.photoDataHistory;
 
       const photoDataIndex = state.backgroundPhoto.photoDataIndex - 1;
+      const photoData = photoDataHistory[photoDataIndex];
 
-      if (photoDataHistory[photoDataIndex]) {
+      if (photoData) {
         dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
+        db.history.add({imageId: photoData.data.id});
       }
-
-      resolve();
     });
   };
 }
@@ -74,12 +75,12 @@ export function next() {
       const photoDataHistory = state.backgroundPhoto.photoDataHistory;
 
       const photoDataIndex = state.backgroundPhoto.photoDataIndex + 1;
+      const photoData = photoDataHistory[photoDataIndex];
 
-      if (photoDataHistory[photoDataIndex]) {
+      if (photoData) {
         dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
+        db.history.add({imageId: photoData.data.id});
       }
-
-      resolve();
     });
   };
 }
@@ -196,4 +197,32 @@ async function fetchImageContent(url) {
     reader.onerror = reject;
     reader.readAsDataURL(response.data);
   });
+}
+
+export async function populateHistory() {
+  return (dispatch, getState) => {
+    return new Promise(async (resolve, reject) => {
+      const historyItems = await db.history.orderBy(':id').limit(50).toArray();
+
+      const photoDataHistory = [];
+
+      const promises = historyItems.map(async (historyItem, index) => {
+        const itemId = historyItem.imageId;
+
+        if(!itemId) {
+          return;
+        }
+
+        const items = await chrome.storage.promise.local.get(itemId);
+
+        photoDataHistory[index] = items[itemId];
+      });
+
+      await Promise.all(promises);
+
+      dispatch({type: types.SET_BACKGROUND_PHOTO_DATA_HISTORY, photoDataHistory});
+
+      resolve();
+    });
+  };
 }
