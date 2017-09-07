@@ -39,6 +39,7 @@ export function setPhotoData(photoData, updateHistory = true) {
   return (dispatch, getState) => {
     return new Promise((resolve, reject) => {
       dispatch({type: types.ADD_BACKGROUND_PHOTO_DATA_HISTORY, photoData});
+      db.history.add({imageId: photoData.data.id});
 
       const state = getState();
       const photoDataIndex = state.backgroundPhoto.photoDataHistory.length - 1;
@@ -57,12 +58,11 @@ export function previous() {
       const photoDataHistory = state.backgroundPhoto.photoDataHistory;
 
       const photoDataIndex = state.backgroundPhoto.photoDataIndex - 1;
+      const photoData = photoDataHistory[photoDataIndex];
 
-      if (photoDataHistory[photoDataIndex]) {
+      if (photoData) {
         dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
       }
-
-      resolve();
     });
   };
 }
@@ -74,12 +74,11 @@ export function next() {
       const photoDataHistory = state.backgroundPhoto.photoDataHistory;
 
       const photoDataIndex = state.backgroundPhoto.photoDataIndex + 1;
+      const photoData = photoDataHistory[photoDataIndex];
 
-      if (photoDataHistory[photoDataIndex]) {
+      if (photoData) {
         dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
       }
-
-      resolve();
     });
   };
 }
@@ -196,4 +195,25 @@ async function fetchImageContent(url) {
     reader.onerror = reject;
     reader.readAsDataURL(response.data);
   });
+}
+
+export async function populateHistory() {
+  return (dispatch, getState) => {
+    return new Promise(async (resolve, reject) => {
+      const historyItems = await db.history.orderBy(':id').limit(50).toArray();
+
+      const itemIds = historyItems.map((historyItem, index) => historyItem.imageId);
+
+      const items = await chrome.storage.promise.local.get(itemIds);
+
+      const photoDataHistory = [];
+      itemIds.map((id, index) => {
+        photoDataHistory[index] = items[id];
+      });
+
+      dispatch({type: types.SET_BACKGROUND_PHOTO_DATA_HISTORY, photoDataHistory});
+
+      resolve();
+    });
+  };
 }
