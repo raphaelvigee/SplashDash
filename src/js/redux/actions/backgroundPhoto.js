@@ -39,12 +39,12 @@ export function setPhotoData(photoData, updateHistory = true) {
   return (dispatch, getState) => {
     return new Promise((resolve, reject) => {
       dispatch({type: types.ADD_BACKGROUND_PHOTO_DATA_HISTORY, photoData});
+      db.history.add({imageId: photoData.data.id});
 
       const state = getState();
       const photoDataIndex = state.backgroundPhoto.photoDataHistory.length - 1;
 
       dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
-      db.history.add({imageId: photoData.data.id});
 
       resolve();
     });
@@ -62,7 +62,6 @@ export function previous() {
 
       if (photoData) {
         dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
-        db.history.add({imageId: photoData.data.id});
       }
     });
   };
@@ -79,7 +78,6 @@ export function next() {
 
       if (photoData) {
         dispatch({type: types.SET_CURRENT_PHOTO_DATA_INDEX, photoDataIndex});
-        db.history.add({imageId: photoData.data.id});
       }
     });
   };
@@ -202,23 +200,16 @@ async function fetchImageContent(url) {
 export async function populateHistory() {
   return (dispatch, getState) => {
     return new Promise(async (resolve, reject) => {
-      const historyItems = await db.history.orderBy(':id').limit(50).toArray();
+      const historyItems = await db.history.orderBy(':id').limit(10).toArray();
+
+      const itemIds = historyItems.map((historyItem, index) => historyItem.imageId);
+
+      const items = await chrome.storage.promise.local.get(itemIds);
 
       const photoDataHistory = [];
-
-      const promises = historyItems.map(async (historyItem, index) => {
-        const itemId = historyItem.imageId;
-
-        if(!itemId) {
-          return;
-        }
-
-        const items = await chrome.storage.promise.local.get(itemId);
-
-        photoDataHistory[index] = items[itemId];
+      itemIds.map((id, index) => {
+        photoDataHistory[index] = items[id];
       });
-
-      await Promise.all(promises);
 
       dispatch({type: types.SET_BACKGROUND_PHOTO_DATA_HISTORY, photoDataHistory});
 
