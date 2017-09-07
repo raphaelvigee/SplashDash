@@ -200,7 +200,7 @@ async function fetchImageContent(url) {
 export async function populateHistory() {
   return (dispatch, getState) => {
     return new Promise(async (resolve, reject) => {
-      const historyItems = await db.history.orderBy(':id').limit(10).toArray();
+      const historyItems = await db.history.orderBy(':id').limit(50).toArray();
 
       const itemIds = historyItems.map((historyItem, index) => historyItem.imageId);
 
