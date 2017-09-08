@@ -20,10 +20,13 @@ export default function backgroundPhoto(state = initialState, action = {}) {
           action.photoData,
         ],
       };
-    case types.SET_BACKGROUND_PHOTO_DATA_HISTORY:
+    case types.PREPEND_BACKGROUND_PHOTO_DATA_HISTORY:
       return {
         ...state,
-        photoDataHistory: action.photoDataHistory,
+        photoDataHistory: [
+          ...action.photoDataHistory,
+          ...state.photoDataHistory,
+        ],
       };
     default:
       return state;

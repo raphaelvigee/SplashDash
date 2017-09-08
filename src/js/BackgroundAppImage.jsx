@@ -31,8 +31,8 @@ export default class BackgroundAppImage extends Component {
     });
   }
 
-  async componentDidMount() {
-    await this.props.backgroundPhotoActions.populateHistory();
+  componentDidMount() {
+    this.props.backgroundPhotoActions.populateHistory();
 
     this.change();
 

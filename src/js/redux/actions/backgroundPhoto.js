@@ -211,7 +211,9 @@ export async function populateHistory() {
         photoDataHistory[index] = items[id];
       });
 
-      dispatch({type: types.SET_BACKGROUND_PHOTO_DATA_HISTORY, photoDataHistory});
+      photoDataHistory.reverse();
+
+      dispatch({type: types.PREPEND_BACKGROUND_PHOTO_DATA_HISTORY, photoDataHistory});
 
       resolve();
     });
