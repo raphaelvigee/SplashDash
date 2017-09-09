@@ -21,12 +21,15 @@ export default function backgroundPhoto(state = initialState, action = {}) {
         ],
       };
     case types.PREPEND_BACKGROUND_PHOTO_DATA_HISTORY:
+      const index = state.photoDataIndex;
+
       return {
         ...state,
         photoDataHistory: [
           ...action.photoDataHistory,
           ...state.photoDataHistory,
         ],
+        photoDataIndex: Number.isInteger(index) ? (index + action.photoDataHistory.length) : index
       };
     default:
       return state;
